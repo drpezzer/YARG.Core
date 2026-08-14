@@ -184,6 +184,30 @@ namespace YARG.Core.Game
 
             #endregion
 
+            /// <summary>
+            /// Gets the color of the row a note does NOT belong to.
+            /// </summary>
+            /// <remarks>
+            /// A GHL note is drawn as three alternating tones - a black note is black outside,
+            /// white in the middle band, black again in the center - so the middle band needs
+            /// the opposite row's color.
+            /// </remarks>
+            public Color GetOppositeRowNoteColor(int index)
+            {
+                return index switch
+                {
+                    (int) SixFretGuitarFret.Black1 or
+                    (int) SixFretGuitarFret.Black2 or
+                    (int) SixFretGuitarFret.Black3 => WhiteRow,
+
+                    (int) SixFretGuitarFret.White1 or
+                    (int) SixFretGuitarFret.White2 or
+                    (int) SixFretGuitarFret.White3 => BlackRow,
+
+                    _ => WhiteRow
+                };
+            }
+
             #region Metal
 
             public Color Metal          = DefaultMetal;
