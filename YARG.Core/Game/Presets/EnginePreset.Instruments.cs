@@ -173,8 +173,14 @@ namespace YARG.Core.Game
             [SettingType(SettingType.Toggle)]
             public bool InfiniteFrontEnd = false;
 
+            /// <remarks>
+            /// On by default, unlike five-fret. Solo sections are meant to be played on the
+            /// upper "solo" frets, which a six-fret guitar physically doesn't have - so without
+            /// this a player has no way to use that mechanic at all. Enabling it lets solo notes
+            /// be tapped instead.
+            /// </remarks>
             [SettingType(SettingType.Toggle)]
-            public bool SoloTaps = false;
+            public bool SoloTaps = true;
 
             [SettingType(SettingType.Toggle)]
             public bool NoStarPowerOverlap = false;
