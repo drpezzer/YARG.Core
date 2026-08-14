@@ -163,6 +163,89 @@ namespace YARG.Core.Game
         }
 
         /// <summary>
+        /// The engine preset for six fret guitar.
+        /// </summary>
+        public class SixFretGuitarPreset
+        {
+            [SettingType(SettingType.Toggle)]
+            public bool AntiGhosting = true;
+
+            [SettingType(SettingType.Toggle)]
+            public bool InfiniteFrontEnd = false;
+
+            [SettingType(SettingType.Toggle)]
+            public bool SoloTaps = false;
+
+            [SettingType(SettingType.Toggle)]
+            public bool NoStarPowerOverlap = false;
+
+            [SettingType(SettingType.Toggle)]
+            public bool EnableLanes = true;
+
+            [SettingType(SettingType.MillisecondInput)]
+            [SettingRange(min: 0f)]
+            public double HopoLeniency = 0.08;
+
+            [SettingType(SettingType.MillisecondInput)]
+            [SettingRange(min: 0f)]
+            public double StrumLeniency = 0.05;
+
+            [SettingType(SettingType.MillisecondInput)]
+            [SettingRange(min: 0f)]
+            public double StrumLeniencySmall = 0.025;
+
+            [SettingType(SettingType.MillisecondInput)]
+            [SettingRange(min: 0f, max: 0.05f)]
+            public double SustainDropLeniency = DEFAULT_SUSTAIN_DROP_LENIENCY;
+
+            [SettingType(SettingType.Special)]
+            public HitWindowPreset HitWindow = new()
+            {
+                MaxWindow = 0.14,
+                MinWindow = 0.14,
+                IsDynamic = false,
+                FrontToBackRatio = 1.0,
+                LaneAutohitWindow = 0.160
+            };
+
+            public SixFretGuitarPreset Copy()
+            {
+                return new SixFretGuitarPreset
+                {
+                    AntiGhosting = AntiGhosting,
+                    InfiniteFrontEnd = InfiniteFrontEnd,
+                    HopoLeniency = HopoLeniency,
+                    StrumLeniency = StrumLeniency,
+                    StrumLeniencySmall = StrumLeniencySmall,
+                    HitWindow = HitWindow.Copy(),
+                    SoloTaps = SoloTaps,
+                    NoStarPowerOverlap = NoStarPowerOverlap,
+                    EnableLanes = EnableLanes,
+                };
+            }
+
+            public GuitarEngineParameters Create(float[] starMultiplierThresholds, float[] soloBonusStarMultiplierThresholds, bool isBass)
+            {
+                var hitWindow = HitWindow.Create();
+                return new GuitarEngineParameters(
+                    hitWindow,
+                    isBass ? BASS_MAX_MULTIPLIER : DEFAULT_MAX_MULTIPLIER,
+                    DEFAULT_WHAMMY_BUFFER,
+                    SustainDropLeniency,
+                    starMultiplierThresholds,
+                    soloBonusStarMultiplierThresholds,
+                    HopoLeniency,
+                    StrumLeniency,
+                    StrumLeniencySmall,
+                    InfiniteFrontEnd,
+                    AntiGhosting,
+                    SoloTaps,
+                    NoStarPowerOverlap,
+                    EnableLanes);
+            }
+        }
+
+        /// <summary>
         /// The engine preset for four and five lane drums. These two game modes
         /// use the same engine, so there's no point in splitting them up.
         /// </summary>

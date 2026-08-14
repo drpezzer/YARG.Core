@@ -8,7 +8,7 @@ namespace YARG.Core.Game
 {
     public partial class ColorProfile : BasePreset, IBinarySerializable
     {
-        private const int COLOR_PROFILE_VERSION = 1;
+        private const int COLOR_PROFILE_VERSION = 2;
 
         /// <summary>
         /// Interface that has methods that allows for generic fret color retrieval.
@@ -27,6 +27,8 @@ namespace YARG.Core.Game
         [SettingSubSection]
         public FiveFretGuitarColors FiveFretGuitar;
         [SettingSubSection]
+        public SixFretGuitarColors SixFretGuitar;
+        [SettingSubSection]
         public FourLaneDrumsColors FourLaneDrums;
         [SettingSubSection]
         public FiveLaneDrumsColors FiveLaneDrums;
@@ -36,6 +38,7 @@ namespace YARG.Core.Game
         public ColorProfile(string name, bool defaultPreset = false) : base(name, defaultPreset)
         {
             FiveFretGuitar = new FiveFretGuitarColors();
+            SixFretGuitar = new SixFretGuitarColors();
             FourLaneDrums = new FourLaneDrumsColors();
             FiveLaneDrums = new FiveLaneDrumsColors();
             ProKeys = new ProKeysColors();
@@ -46,6 +49,7 @@ namespace YARG.Core.Game
             return new ColorProfile(name)
             {
                 FiveFretGuitar = FiveFretGuitar.Copy(),
+                SixFretGuitar = SixFretGuitar.Copy(),
                 FourLaneDrums = FourLaneDrums.Copy(),
                 FiveLaneDrums = FiveLaneDrums.Copy(),
                 ProKeys = ProKeys.Copy(),
@@ -61,6 +65,7 @@ namespace YARG.Core.Game
             FourLaneDrums.Serialize(writer);
             FiveLaneDrums.Serialize(writer);
             ProKeys.Serialize(writer);
+            SixFretGuitar.Serialize(writer);
         }
 
         public void Deserialize(BinaryReader reader, int version = 0)
@@ -72,6 +77,14 @@ namespace YARG.Core.Game
             FourLaneDrums.Deserialize(reader, version);
             FiveLaneDrums.Deserialize(reader, version);
             ProKeys.Deserialize(reader, version);
+
+            // SixFretGuitar was added in version 2; older serialized profiles won't have
+            // this block, so keep the freshly-constructed defaults instead of reading past
+            // the end of the stream.
+            if (version >= 2)
+            {
+                SixFretGuitar.Deserialize(reader, version);
+            }
         }
     }
 }
