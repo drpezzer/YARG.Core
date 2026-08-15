@@ -14,6 +14,10 @@ namespace YARG.Core.Engine.Guitar.Engines
     // widened to match too, for explicitness, though it's not behavior-changing today.
     public class YargSixFretGuitarEngine : GuitarEngine
     {
+        // Without this the base -1 default is inherited, and RequiredLaneNote can never equal
+        // it, so wildcard lane notes are never recognised as "any fret will do".
+        protected override int WildcardMask => 1 << ((int) SixFretGuitarFret.Wildcard - 1);
+
         public YargSixFretGuitarEngine(InstrumentDifficulty<GuitarNote> chart, SyncTrack syncTrack,
             GuitarEngineParameters engineParameters, bool isBot)
             : base(chart, syncTrack, engineParameters, isBot)
