@@ -17,7 +17,7 @@ namespace YARG.Core.Chart
         /// The highest five-fret lane a difficulty is allowed to use.
         /// </summary>
         /// <remarks>
-        /// Five-fret charts traditionally hold Medium and below to four lanes, keeping Orange for
+        /// Five-fret charts traditionally hold Medium and below (Beginner included) to four lanes, keeping Orange for
         /// Hard and Expert. A six-fret chart has no such convention - its lower difficulties still
         /// use both rows - so converting one straight across puts Orange notes on Medium, which
         /// reads as wrong to anyone used to normal charts and asks for a stretch the difficulty
@@ -25,11 +25,11 @@ namespace YARG.Core.Chart
         /// </remarks>
         private static FiveFretGuitarFret HighestLane(Difficulty difficulty)
         {
-            return difficulty switch
-            {
-                Difficulty.Easy or Difficulty.Medium => FiveFretGuitarFret.Blue,
-                _                                    => FiveFretGuitarFret.Orange,
-            };
+            // A comparison rather than a list, so Beginner (and anything added below Medium later)
+            // can't slip through to Orange.
+            return difficulty <= Difficulty.Medium
+                ? FiveFretGuitarFret.Blue
+                : FiveFretGuitarFret.Orange;
         }
 
         /// <summary>
